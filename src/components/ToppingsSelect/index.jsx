@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import Topping from "../Topping";
 import './style.css';
 
-const ToppingsSelect = ({ toppings }) => {
-  const [myToppings, setMyToppings] = useState(toppings);
-  
+const ToppingsSelect = ({ toppings,setToppings }) => {
   let selectedAmount = 0;
   let sum = 0;
 
@@ -17,9 +15,9 @@ const ToppingsSelect = ({ toppings }) => {
   });
 
   const handleSelect = (index,checked)=>{
-    const newToppings = [...myToppings];
+    const newToppings = [...toppings];
     newToppings[index].selected = checked;
-    setMyToppings(newToppings);
+    setToppings(newToppings);
   }
 
   return (
@@ -28,7 +26,7 @@ const ToppingsSelect = ({ toppings }) => {
       <p>Selected toppings: {selectedAmount}, total price: {sum} Euro</p>
         
       <div className="toppings">
-        {myToppings.map((topping,index) => (
+        {toppings.map((topping,index) => (
           <Topping topping={topping} key={topping.name} onChecked={(checked)=>handleSelect(index,checked)}/>
         ))}
       </div>
