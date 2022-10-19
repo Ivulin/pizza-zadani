@@ -1,6 +1,8 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import { createRoot } from 'react-dom/client';
+import { PrefsContext } from './components/prefs-context';
 import ToppingsSelect from './components/ToppingsSelect';
+import Header from './components/Header';
 import './style.css';
 
 const toppings = [
@@ -79,16 +81,31 @@ const toppings = [
 ];
 
 const App = () => {
+  const [veganOnly, setVeganOnly ] = useState(true); 
+  const [myToppings, setMyToppings] = useState(toppings);
+
+  useEffect(()=>{
+    const newToppings = [...toppings];
+    
+    newToppings.forEach((topping) => {
+      if(veganOnly && topping.vegan==false && topping.selected)
+      {
+        topping.selected=false;
+      }
+    });
+
+    setMyToppings(newToppings);
+  },[veganOnly])
+
   return (
-    <div className="container">
-      <header>
-        <div className="pizza" />
-        <h1>Build your own pizza</h1>
-      </header>
-      <main>
-        <ToppingsSelect toppings={toppings} />
-      </main>
+    <PrefsContext.Provider value={{ veganOnly, setVeganOnly }}>
+      <div className="container">
+        <Header veganState={veganOnly} setVeganState={setVeganOnly}/>
+        <main>
+          <ToppingsSelect toppings={myToppings} setToppings={setMyToppings}/>
+        </main>
     </div>
+    </PrefsContext.Provider>
   );
 };
 
